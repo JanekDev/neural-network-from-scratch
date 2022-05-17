@@ -37,6 +37,13 @@ def sigmoid_prime(x):
 def mse(y_true, y_pred):
     return np.mean(np.power(y_true-y_pred, 2));
 
+def cross_entropy(y_true, y_pred):
+    N = y_pred.shape[0]
+    return -np.sum(y_true * np.log(y_pred)) / N
+
+def cross_entropy_prime(y_true, y_pred):
+    return y_pred - y_true;
+
 def mse_prime(y_true, y_pred):
     return 2*(y_pred-y_true)/y_true.size;
 
@@ -52,8 +59,17 @@ def softmax(x):
 def softmax_prime(x):
     return softmax(x)*(1-softmax(x));
 
-def cross_entropy(y_true, y_pred):
-    return -np.sum(y_true*np.log(y_pred));
-
-def cross_entropy_prime(y_true, y_pred):
-    return -y_true/y_pred;
+def to_categorical(y, num_classes=None, dtype='float32'):
+    y = np.array(y, dtype='int')
+    input_shape = y.shape
+    if input_shape and input_shape[-1] == 1 and len(input_shape) > 1:
+        input_shape = tuple(input_shape[:-1])
+    y = y.ravel()
+    if not num_classes:
+        num_classes = np.max(y) + 1
+    n = y.shape[0]
+    categorical = np.zeros((n, num_classes), dtype=dtype)
+    categorical[np.arange(n), y] = 1
+    output_shape = input_shape + (num_classes,)
+    categorical = np.reshape(categorical, output_shape)
+    return categorical
