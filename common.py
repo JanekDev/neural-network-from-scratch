@@ -29,9 +29,26 @@ def load_mnist(path, kind='train'):
     images = images.reshape(images.shape[0], 1, 784)
     
     return images, labels
+def softmax(x):
+    return np.exp(x) / np.sum(np.exp(x), axis=1)
+
+def tanh(x):
+    return np.tanh(x)
+
+def tanh_prime(x):
+    return 1 - np.tanh(x) ** 2
+
+def softmax_prime(x):
+    return softmax(x) * (1 - softmax(x))
 
 def cross_entropy(y, y_hat):
     return -np.sum(y * np.log(y_hat))
 
 def cross_entropy_prime(y, y_hat):
     return y_hat - y
+
+def mse(y, y_hat):
+    return np.mean((y - y_hat) ** 2)
+
+def mse_prime(y, y_hat):
+    return 2 * (y - y_hat) / y.size
